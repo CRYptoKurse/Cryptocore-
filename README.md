@@ -8,6 +8,7 @@ cryptocore dgst --algorithm sha3-256 --input data.bin --output hash.txt
 # Шифрование (старое)
 cryptocore encrypt --algorithm aes --mode cbc --input secret.txt
 cryptocore encrypt --decrypt --algorithm aes --mode cbc --input secret.enc --key <ключ>
+
  КАК РАБОТАЕТ:
 SHA-256: Реализован с нуля (Merkle-Damgård, блоки 512 бит)
 
