@@ -1,6 +1,6 @@
  КРАТКИЙ ОТЧЕТ: СПРИНТ 4 ВЫПОЛНЕН
  КАК ИСПОЛЬЗОВАТЬ:
-text
+
 # Хеширование файлов
 cryptocore dgst --algorithm sha256 --input file.txt
 cryptocore dgst --algorithm sha3-256 --input data.bin --output hash.txt
