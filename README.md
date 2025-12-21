@@ -14,7 +14,7 @@
 
 ```bash
 pip install pycryptodome
-git clone <репозиторий>
+git clone https://github.com/CRYptoKurse/Cryptocore-.git
 cd cryptocore
 Использование
 bash
