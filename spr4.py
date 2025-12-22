@@ -19,7 +19,7 @@ def run_command(cmd):
         # Если команда содержит 'cryptocore.py' и '--algorithm', но не содержит подкоманду, то добавить 'dgst'
         if 'cryptocore.py' in cmd and '--algorithm' in cmd and 'cryptocore.py dgst' not in cmd:
             # Заменяем 'python cryptocore.py' на 'python cryptocore.py dgst'
-            cmd = cmd.replace('python cryptocore.py', 'python cryptocore.py dgst')
+            cmd = cmd.replace('python3 cryptocore.py', 'python cryptocore.py dgst')
         result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
         return result.returncode, result.stdout.strip(), result.stderr.strip()
     except Exception as e:
@@ -56,7 +56,7 @@ def test_empty_file():
     expected_sha3_256 = "a7ffc6f8bf1ed76651c14756a061d662f580ff4de43b49fa82d80a4b80f8434a"
 
     # Тест SHA-256
-    cmd = f"python cryptocore.py dgst --algorithm sha256 --input {empty_file}"
+    cmd = f"python3 cryptocore.py dgst --algorithm sha256 --input {empty_file}"
     ret, out, err = run_command(cmd)
 
     if ret == 0:
@@ -72,7 +72,7 @@ def test_empty_file():
         print(f"✗ Ошибка выполнения команды: {err}")
 
     # Тест SHA3-256
-    cmd = f"python cryptocore.py dgst --algorithm sha3-256 --input {empty_file}"
+    cmd = f"python3 cryptocore.py dgst --algorithm sha3-256 --input {empty_file}"
     ret, out, err = run_command(cmd)
 
     if ret == 0:
@@ -124,7 +124,7 @@ def test_nist_vectors():
             test_file = f.name
 
         # Тест SHA-256
-        cmd = f"python cryptocore.py dgst --algorithm sha256 --input {test_file}"
+        cmd = f"python3 cryptocore.py dgst --algorithm sha256 --input {test_file}"
         ret, out, err = run_command(cmd)
 
         if ret == 0:
@@ -140,7 +140,7 @@ def test_nist_vectors():
             print(f"✗ Тест {i + 1}.1 SHA-256: Ошибка - {err}")
 
         # Тест SHA3-256
-        cmd = f"python cryptocore.py dgst --algorithm sha3-256 --input {test_file}"
+        cmd = f"python3 cryptocore.py dgst --algorithm sha3-256 --input {test_file}"
         ret, out, err = run_command(cmd)
 
         if ret == 0:
@@ -200,7 +200,7 @@ def test_compatibility():
             system_hash = out.split()[0]
 
             # Получаем хеш через нашу утилиту
-            cmd = f"python cryptocore.py dgst --algorithm sha256 --input {test_file}"
+            cmd = f"python3 cryptocore.py dgst --algorithm sha256 --input {test_file}"
             ret, out, err = run_command(cmd)
             if ret == 0:
                 our_hash = out.split()[0]
@@ -227,7 +227,7 @@ def test_compatibility():
             system_hash = out.split()[0]
 
             # Получаем хеш через нашу утилиту
-            cmd = f"python cryptocore.py dgst --algorithm sha3-256 --input {test_file}"
+            cmd = f"python3 cryptocore.py dgst --algorithm sha3-256 --input {test_file}"
             ret, out, err = run_command(cmd)
             if ret == 0:
                 our_hash = out.split()[0]
@@ -274,7 +274,7 @@ def test_large_file():
     # Хешируем с помощью нашей утилиты
     start_time = time.time()
 
-    cmd = f"python cryptocore.py dgst --algorithm sha256 --input {large_file}"
+    cmd = f"python3 cryptocore.py dgst --algorithm sha256 --input {large_file}"
     ret, out, err = run_command(cmd)
 
     elapsed = time.time() - start_time
@@ -341,13 +341,13 @@ def test_avalanche_effect():
     print(f"  Файл 2: {file2}")
 
     # Получаем хеши через нашу утилиту
-    cmd = f"python cryptocore.py dgst --algorithm sha256 --input {file1}"
+    cmd = f"python3 cryptocore.py dgst --algorithm sha256 --input {file1}"
     ret, out1, err = run_command(cmd)
     if ret != 0:
         print(f"✗ Ошибка для файла 1: {err}")
         return False
 
-    cmd = f"python cryptocore.py dgst --algorithm sha256 --input {file2}"
+    cmd = f"python3 cryptocore.py dgst --algorithm sha256 --input {file2}"
     ret, out2, err = run_command(cmd)
     if ret != 0:
         print(f"✗ Ошибка для файла 2: {err}")
@@ -407,7 +407,7 @@ def test_output_to_file():
     output_file = "test_output.hash"
 
     # Запускаем с выводом в файл
-    cmd = f"python cryptocore.py dgst --algorithm sha256 --input {input_file} --output {output_file}"
+    cmd = f"python3 cryptocore.py dgst --algorithm sha256 --input {input_file} --output {output_file}"
     ret, out, err = run_command(cmd)
 
     if ret == 0:
@@ -417,7 +417,7 @@ def test_output_to_file():
                 file_content = f.read().strip()
 
             # Сравниваем с выводом в stdout (который должен быть пустым при --output)
-            cmd = f"python cryptocore.py dgst --algorithm sha256 --input {input_file}"
+            cmd = f"python3 cryptocore.py dgst --algorithm sha256 --input {input_file}"
             ret, stdout_hash, err = run_command(cmd)
 
             if ret == 0:
@@ -458,7 +458,7 @@ def test_error_handling():
 
     # Тест 1: Несуществующий файл
     print("\n1. Тест с несуществующим файлом:")
-    cmd = "python cryptocore.py dgst --algorithm sha256 --input nonexistent_file.txt"
+    cmd = "python3 cryptocore.py dgst --algorithm sha256 --input nonexistent_file.txt"
     ret, out, err = run_command(cmd)
     if ret != 0:
         print("✓ Правильно обработана ошибка отсутствующего файла")
@@ -468,7 +468,7 @@ def test_error_handling():
 
     # Тест 2: Некорректный алгоритм
     print("\n2. Тест с некорректным алгоритмом:")
-    cmd = "python cryptocore.py dgst --algorithm md5 --input test.txt"
+    cmd = "python3 cryptocore.py dgst --algorithm md5 --input test.txt"
     ret, out, err = run_command(cmd)
     if ret != 0:
         print("✓ Правильно обработана ошибка некорректного алгоритма")
@@ -478,7 +478,7 @@ def test_error_handling():
 
     # Тест 3: Отсутствует обязательный аргумент
     print("\n3. Тест без обязательного аргумента --input:")
-    cmd = "python cryptocore.py dgst --algorithm sha256"
+    cmd = "python3 cryptocore.py dgst --algorithm sha256"
     ret, out, err = run_command(cmd)
     if ret != 0:
         print("✓ Правильно обработана ошибка отсутствия аргумента")

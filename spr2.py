@@ -32,9 +32,9 @@ def run_cryptocore(args):
     """Запуск cryptocore"""
     # Добавляем подкоманду encrypt если её нет
     if len(args) > 0 and args[0] not in ['encrypt', 'dgst', 'derive']:
-        cmd = ['python', 'cryptocore.py', 'encrypt'] + args
+        cmd = ['python3', 'cryptocore.py', 'encrypt'] + args
     else:
-        cmd = ['python', 'cryptocore.py'] + args
+        cmd = ['python3', 'cryptocore.py'] + args
     result = subprocess.run(cmd, capture_output=True, text=True)
     return result.returncode, result.stdout, result.stderr
 
@@ -347,7 +347,7 @@ def run_simple_demo():
         try:
             # Шифрование (без флага --encrypt)
             print(f"Шифрование...")
-            enc_cmd = ['python', 'cryptocore.py', 'encrypt',
+            enc_cmd = ['python3', 'cryptocore.py', 'encrypt',
                        '--algorithm', 'aes',
                        '--mode', mode,
                        '--key', key,
@@ -368,7 +368,7 @@ def run_simple_demo():
 
             # Дешифрование (без указания IV - читает из файла)
             print(f"Дешифрование (читаем IV из файла)...")
-            dec_cmd = ['python', 'cryptocore.py', 'encrypt',
+            dec_cmd = ['python3', 'cryptocore.py', 'encrypt',
                        '--algorithm', 'aes',
                        '--mode', mode,
                        '--decrypt',

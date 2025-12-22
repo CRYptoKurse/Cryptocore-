@@ -241,9 +241,13 @@ class TestCryptoCore:
         test_data = b"test for auto filename"
         key = self._generate_key()
 
-        # Тест шифрования
-        input_file = self._create_test_file(test_data, "auto_test.txt")
+        # Используем уникальное имя файла чтобы избежать конфликтов
+        import time
+        timestamp = str(int(time.time()))
+        base_name = f"auto_test_{timestamp}.txt"
+        input_file = self._create_test_file(test_data, base_name)
 
+        # Шифруем без указания output
         result = self._run_command([
             "--algorithm", "aes",
             "--mode", "ecb",
@@ -253,11 +257,12 @@ class TestCryptoCore:
         ])
 
         encrypted_file = input_file + ".enc"
+        expected_encrypted = os.path.join(self.temp_dir, base_name + ".enc")
 
         if result.returncode == 0 and os.path.exists(encrypted_file):
             print("✓ Автоматическое имя для шифрования создано")
 
-            # Тест дешифрования
+            # Дешифруем без указания output
             result = self._run_command([
                 "--algorithm", "aes",
                 "--mode", "ecb",
@@ -267,22 +272,27 @@ class TestCryptoCore:
                 # --output не указываем
             ])
 
-            decrypted_file = encrypted_file + ".dec"
+            # Файл должен быть создан с .dec расширением
+            expected_decrypted = encrypted_file + ".dec"
 
-            if result.returncode == 0 and os.path.exists(decrypted_file):
+            if result.returncode == 0 and os.path.exists(expected_decrypted):
                 print("✓ Автоматическое имя для дешифрования создано")
 
                 # Проверяем корректность дешифрования
-                with open(decrypted_file, 'rb') as f:
+                with open(expected_decrypted, 'rb') as f:
                     decrypted_data = f.read()
 
                 if test_data == decrypted_data:
                     print("✓ Автоматические имена работают корректно")
+
+                    # Удаляем временные файлы
+                    for f in [encrypted_file, expected_decrypted]:
+                        if os.path.exists(f):
+                            os.unlink(f)
                     return True
 
         print("✗ Ошибка при создании автоматических имен файлов")
         return False
-
     def test_verbose_output(self):
         """Тест подробного вывода"""
         print("\n=== Тест 8: Проверка подробного вывода ===")
