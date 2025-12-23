@@ -32,9 +32,9 @@ def run_cryptocore(args):
     """Запуск cryptocore"""
     # Добавляем подкоманду encrypt если её нет
     if len(args) > 0 and args[0] not in ['encrypt', 'dgst', 'derive']:
-        cmd = ['python3', 'cryptocore.py', 'encrypt'] + args
+        cmd = ['python', 'cryptocore.py', 'encrypt'] + args
     else:
-        cmd = ['python3', 'cryptocore.py'] + args
+        cmd = ['python', 'cryptocore.py'] + args
     result = subprocess.run(cmd, capture_output=True, text=True)
     return result.returncode, result.stdout, result.stderr
 
@@ -325,76 +325,6 @@ def test_3_simple_iv_handling():
     return total_passed, total_failed
 
 
-def run_simple_demo():
-    """Простая демонстрация работы всех режимов"""
-    print("\n" + "=" * 60)
-    print("ПРОСТАЯ ДЕМОНСТРАЦИЯ РАБОТЫ ВСЕХ РЕЖИМОВ")
-    print("=" * 60)
-
-    key = "00112233445566778899aabbccddeeff"
-    test_data = b"Hello, CryptoCore! Testing all modes."
-
-    modes = ['cbc', 'cfb', 'ofb', 'ctr']
-
-    for mode in modes:
-        print(f"\n--- Режим {mode.upper()} ---")
-
-        # Создаем временные файлы
-        input_file = write_temp_file(test_data)
-        encrypted_file = input_file + '.enc'
-        decrypted_file = input_file + '.dec'
-
-        try:
-            # Шифрование (без флага --encrypt)
-            print(f"Шифрование...")
-            enc_cmd = ['python3', 'cryptocore.py', 'encrypt',
-                       '--algorithm', 'aes',
-                       '--mode', mode,
-                       '--key', key,
-                       '--input', input_file,
-                       '--output', encrypted_file,
-                       '--verbose']
-
-            ret, out, err = run_cryptocore(enc_cmd)
-            if ret != 0:
-                print(f"  Ошибка: {err}")
-                continue
-
-            # Проверяем размер зашифрованного файла
-            with open(encrypted_file, 'rb') as f:
-                encrypted = f.read()
-            print(f"  Размер зашифрованного файла: {len(encrypted)} байт")
-            print(f"  IV (первые 16 байт): {encrypted[:16].hex()}")
-
-            # Дешифрование (без указания IV - читает из файла)
-            print(f"Дешифрование (читаем IV из файла)...")
-            dec_cmd = ['python3', 'cryptocore.py', 'encrypt',
-                       '--algorithm', 'aes',
-                       '--mode', mode,
-                       '--decrypt',
-                       '--key', key,
-                       '--input', encrypted_file,
-                       '--output', decrypted_file,
-                       '--verbose']
-
-            ret, out, err = run_cryptocore(dec_cmd)
-            if ret != 0:
-                print(f"  Ошибка: {err}")
-                continue
-
-            # Проверяем результат
-            with open(decrypted_file, 'rb') as f:
-                decrypted = f.read()
-
-            if test_data == decrypted:
-                print(f"  ✅ Успешно! Данные восстановлены.")
-            else:
-                print(f"  ❌ Ошибка! Данные не совпадают.")
-                print(f"    Оригинал: {test_data}")
-                print(f"    Результат: {decrypted}")
-
-        finally:
-            cleanup_files(input_file, encrypted_file, decrypted_file)
 
 
 def main():
@@ -409,16 +339,15 @@ def main():
         print("Запустите тесты из директории с cryptocore.py")
         return
 
-    print("\n1. Запуск простой демонстрации...")
-    run_simple_demo()
+    
 
-    print("\n2. Запуск TEST-1: Циклический тест...")
+    print("\n1. Запуск TEST-1: Циклический тест...")
     passed1, failed1 = test_1_roundtrip_all_modes()
 
-    print("\n3. Запуск TEST-2 (исправленный): Дешифрование с предоставленным IV...")
+    print("\n2. Запуск TEST-2 (исправленный): Дешифрование с предоставленным IV...")
     passed2, failed2 = test_2_with_provided_iv_corrected()
 
-    print("\n4. Запуск TEST-3: Работа с IV...")
+    print("\n3. Запуск TEST-3: Работа с IV...")
     passed3, failed3 = test_3_simple_iv_handling()
 
     # Итоговый отчет
