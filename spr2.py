@@ -32,9 +32,9 @@ def run_cryptocore(args):
     """Запуск cryptocore"""
     # Добавляем подкоманду encrypt если её нет
     if len(args) > 0 and args[0] not in ['encrypt', 'dgst', 'derive']:
-        cmd = ['python', 'cryptocore.py', 'encrypt'] + args
+        cmd = ['python3', 'cryptocore.py', 'encrypt'] + args
     else:
-        cmd = ['python', 'cryptocore.py'] + args
+        cmd = ['python3', 'cryptocore.py'] + args
     result = subprocess.run(cmd, capture_output=True, text=True)
     return result.returncode, result.stdout, result.stderr
 
