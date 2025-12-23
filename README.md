@@ -13,6 +13,10 @@
 ## Установка
 
 ```bash
+sudo apt install git
+sudo apt install python3-venv python3-pip python3-full
+python3 -m venv
+sourse venv/bin/activate
 pip install pycryptodome
 git clone https://github.com/CRYptoKurse/Cryptocore-.git
 cd cryptocore
