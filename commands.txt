@@ -1,0 +1,88 @@
+1. Шифрование (encrypt)
+AES-ECB:
+bash
+cryptocore encrypt --algorithm aes --mode ecb --key 00112233445566778899aabbccddeeff --input plain.txt --output encrypted.bin -v
+AES-CBC:
+bash
+cryptocore encrypt --algorithm aes --mode cbc --key 00112233445566778899aabbccddeeff --iv 000102030405060708090a0b0c0d0e0f --input plain.txt --output encrypted.bin -v
+AES-CFB:
+bash
+cryptocore encrypt --algorithm aes --mode cfb --key 00112233445566778899aabbccddeeff --iv 000102030405060708090a0b0c0d0e0f --input plain.txt --output encrypted.bin -v
+AES-OFB:
+bash
+cryptocore encrypt --algorithm aes --mode ofb --key 00112233445566778899aabbccddeeff --iv 000102030405060708090a0b0c0d0e0f --input plain.txt --output encrypted.bin -v
+AES-CTR:
+bash
+cryptocore encrypt --algorithm aes --mode ctr --key 00112233445566778899aabbccddeeff --iv 000102030405060708090a0b0c0d0e0f --input plain.txt --output encrypted.bin -v
+AES-GCM с AAD:
+bash
+cryptocore encrypt --algorithm aes --mode gcm --key 00112233445566778899aabbccddeeff --iv 000102030405060708090a0b --aad 0102030405060708 --input plain.txt --output encrypted.bin -v
+AES-ETM (требует ключ 32+ байт):
+bash
+cryptocore encrypt --algorithm aes --mode etm --key 00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff --input plain.txt --output encrypted.bin -v
+Шифрование с авто-генерацией ключа:
+bash
+cryptocore encrypt --algorithm aes --mode cbc --input data.txt --output data.enc -v
+Шифрование GCM с авто-генерацией ключа:
+bash
+cryptocore encrypt --algorithm aes --mode gcm --input data.txt --output data.enc -v
+2. Дешифрование (encrypt --decrypt)
+Дешифрование ECB:
+bash
+cryptocore encrypt --algorithm aes --mode ecb --decrypt --key 00112233445566778899aabbccddeeff --input encrypted.bin --output decrypted.txt -v
+Дешифрование CBC:
+bash
+cryptocore encrypt --algorithm aes --mode cbc --decrypt --key 00112233445566778899aabbccddeeff --iv 000102030405060708090a0b0c0d0e0f --input encrypted.bin --output decrypted.txt -v
+Дешифрование CFB:
+bash
+cryptocore encrypt --algorithm aes --mode cfb --decrypt --key 00112233445566778899aabbccddeeff --iv 000102030405060708090a0b0c0d0e0f --input encrypted.bin --output decrypted.txt -v
+Дешифрование OFB:
+bash
+cryptocore encrypt --algorithm aes --mode ofb --decrypt --key 00112233445566778899aabbccddeeff --iv 000102030405060708090a0b0c0d0e0f --input encrypted.bin --output decrypted.txt -v
+Дешифрование CTR:
+bash
+cryptocore encrypt --algorithm aes --mode ctr --decrypt --key 00112233445566778899aabbccddeeff --iv 000102030405060708090a0b0c0d0e0f --input encrypted.bin --output decrypted.txt -v
+Дешифрование GCM с AAD:
+bash
+cryptocore encrypt --algorithm aes --mode gcm --decrypt --key 00112233445566778899aabbccddeeff --aad 0102030405060708 --input encrypted.bin --output decrypted.txt -v
+Дешифрование ETM:
+bash
+cryptocore encrypt --algorithm aes --mode etm --decrypt --key 00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff --input encrypted.bin --output decrypted.txt -v
+Дешифрование с извлечением IV из файла:
+bash
+cryptocore encrypt --algorithm aes --mode cbc --decrypt --key 00112233445566778899aabbccddeeff --input encrypted_with_iv.bin --output decrypted.txt -v
+3. Хеширование (dgst)
+SHA-256 хеш файла:
+bash
+cryptocore dgst --algorithm sha256 --input file.txt --output hash.txt -v
+SHA-256 хеш с выводом в консоль:
+bash
+cryptocore dgst --algorithm sha256 --input file.txt -v
+SHA3-256 хеш:
+bash
+cryptocore dgst --algorithm sha3-256 --input file.txt --output hash.txt -v
+HMAC-SHA256 вычисление:
+bash
+cryptocore dgst --algorithm sha256 --hmac --key 00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff --input file.txt --output hmac.txt -v
+HMAC-SHA256 проверка:
+bash
+cryptocore dgst --algorithm sha256 --hmac --key 00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff --input file.txt --verify expected_hmac.txt -v
+4. Генерация ключей из пароля (derive)
+PBKDF2 с паролем:
+bash
+cryptocore derive --password "MySecretPassword123" --iterations 100000 --length 32 -v
+PBKDF2 с солью:
+bash
+cryptocore derive --password "MySecretPassword123" --salt 00112233445566778899aabbccddeeff --iterations 100000 --length 32 -v
+PBKDF2 с сохранением в файл:
+bash
+cryptocore derive --password "MySecretPassword123" --iterations 100000 --length 32 --output derived_key.bin -v
+PBKDF2 из файла с паролем:
+bash
+cryptocore derive --password-file password.txt --iterations 100000 --length 32 -v
+PBKDF2 из переменной окружения:
+bash
+cryptocore derive --env-var SECRET_PASSWORD --iterations 100000 --length 32 -v
+PBKDF2 со всеми параметрами:
+bash
+cryptocore derive --password "secret" --salt 00112233445566778899aabbccddeeff --iterations 50000 --length 64 --algorithm pbkdf2 --output key.bin -v
